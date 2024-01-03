@@ -1,14 +1,14 @@
 #include "DIP.h"
 
-Mat pre_process_color(string ImageName)
+void DIP::pre_process_color(string ImageName)
 {
-    //landsatçš„bgråˆ†åˆ«æ˜¯234æ³¢æ®µï¼Œå…¨è‰²æ˜¯ç¬¬8æ³¢æ®µ
-    Mat mss = imread(ImageName, IMREAD_UNCHANGED);   // è¯»å…¥å›¾ç‰‡ 
+    //landsatµÄbgr·Ö±ğÊÇ234²¨¶Î£¬È«É«ÊÇµÚ8²¨¶Î
+    Mat mss = imread(ImageName, IMREAD_UNCHANGED);   // ¶ÁÈëÍ¼Æ¬ 
 
-    if (mss.empty())     // åˆ¤æ–­æ–‡ä»¶æ˜¯å¦æ­£å¸¸æ‰“å¼€  
+    if (mss.empty())     // ÅĞ¶ÏÎÄ¼şÊÇ·ñÕı³£´ò¿ª  
     {
-        fprintf(stderr, "Can not load image %s\n", ImageName);
-        waitKey(6000);  // ç­‰å¾…6000 msåçª—å£è‡ªåŠ¨å…³é—­   
+        cout<< "Can not load image "<<ImageName<<"\n";
+        waitKey(6000);  // µÈ´ı6000 msºó´°¿Ú×Ô¶¯¹Ø±Õ   
     }
     cout << ImageName << ":" << endl;
     cout << "depth = " << mss.depth() << endl << "channels = " << mss.channels() << endl;
@@ -17,61 +17,55 @@ Mat pre_process_color(string ImageName)
     cout << "Number of bytes per channel per element = " << mss.elemSize1() << endl << "type = " << mss.type() << endl;
 
 
-    Mat b_g_r_ir[4], color_arr[3], color;
+    Mat b_g_r_ir[4], color_arr[3];
     split(mss, b_g_r_ir);
 
     color_arr[0] = b_g_r_ir[2];
     color_arr[1] = b_g_r_ir[1];
     color_arr[2] = b_g_r_ir[0];
-    merge(color_arr, 3, color);
+    merge(color_arr, 3, bmp);
 
-    //å„æ³¢æ®µæ•°å€¼èŒƒå›´å¤§æ¦‚åœ¨0-1001ä¹‹é—´ï¼Œæ‰€ä»¥å»ºè®®è½¬è‡³8æ¯”ç‰¹æ—¶ï¼Œé™¤ä»¥4
-    color.convertTo(color, CV_8UC3, 1.0 / 4.0, 0);
+    //¸÷²¨¶ÎÊıÖµ·¶Î§´ó¸ÅÔÚ0-1001Ö®¼ä£¬ËùÒÔ½¨Òé×ªÖÁ8±ÈÌØÊ±£¬³ıÒÔ4
+    bmp.convertTo(bmp, CV_8UC3, 1.0 / 4.0, 0);
 
-    namedWindow("color", WINDOW_NORMAL);  //è‹¥å›¾ç‰‡å¤ªå¤§ï¼Œç”¨WINDOW_NORMALçš„æ–¹å¼å¯ä»¥è®©å›¾ç‰‡çš„æ˜¾ç¤ºå¤§å°éšçª—å£å¤§å°ç¼©æ”¾
-    imshow("color", color);  // æ˜¾ç¤ºå›¾ç‰‡ 
+    namedWindow("color", WINDOW_NORMAL);  //ÈôÍ¼Æ¬Ì«´ó£¬ÓÃWINDOW_NORMALµÄ·½Ê½¿ÉÒÔÈÃÍ¼Æ¬µÄÏÔÊ¾´óĞ¡Ëæ´°¿Ú´óĞ¡Ëõ·Å
+    imshow("color", bmp);  // ÏÔÊ¾Í¼Æ¬ 
     waitKey();
 
-    //è‹¥ä»…éœ€è¦è£å‰ªéƒ¨åˆ†åšåç»­å¤„ç†
-    //Mat subset = color(Range(2650, 3150), Range(5400, 5900)); //subsetå…±äº«colorçš„éƒ¨åˆ†æ•°æ®ï¼Œå‰é¢ä¸ºè¡ŒèŒƒå›´ï¼Œåé¢ä¸ºåˆ—èŒƒå›´
-    //imwrite("mss_subset.bmp", subset); //16Uçš„æ•°æ®å¯ä»¥ä¿å­˜è‡³pngã€jpeg2000æˆ–tiffæ–‡ä»¶ï¼Œå…¶ä¸­pngå’Œjpeg2000éœ€è¦è®¾ç½®å‹ç¼©å‚æ•°å‰é¢ä¸ºè¡ŒèŒƒå›´ï¼Œåé¢ä¸ºåˆ—èŒƒå›´
-
-    return color;
-
+    //Èô½öĞèÒª²Ã¼ô²¿·Ö×öºóĞø´¦Àí
+    //Mat subset = color(Range(2650, 3150), Range(5400, 5900)); //subset¹²ÏícolorµÄ²¿·ÖÊı¾İ£¬Ç°ÃæÎªĞĞ·¶Î§£¬ºóÃæÎªÁĞ·¶Î§
+    //imwrite("mss_subset.bmp", subset); //16UµÄÊı¾İ¿ÉÒÔ±£´æÖÁpng¡¢jpeg2000»òtiffÎÄ¼ş£¬ÆäÖĞpngºÍjpeg2000ĞèÒªÉèÖÃÑ¹Ëõ²ÎÊıÇ°ÃæÎªĞĞ·¶Î§£¬ºóÃæÎªÁĞ·¶Î§
 }
 
-Mat pre_process_pan(string ImageName)
+void DIP::pre_process_pan(string ImageName)
 {
-    Mat pan = imread(ImageName, IMREAD_UNCHANGED);    //è¯»å…¥å…¨è‰²æ³¢æ®µ
+    bmp = imread(ImageName, IMREAD_UNCHANGED);    //¶ÁÈëÈ«É«²¨¶Î
     cout << ImageName << ":" << endl;
-    cout << "depth = " << pan.depth() << endl << "channels = " << pan.channels() << endl;
-    cout << "Number of rows = " << pan.rows << endl << "Number of columns = " << pan.cols << endl;
-    cout << "Dimension = " << pan.dims << endl << "Number of bytes per element = " << pan.elemSize() << endl;
-    cout << "Number of bytes per channel per element = " << pan.elemSize1() << endl << "type = " << pan.type() << endl;
+    cout << "depth = " << bmp.depth() << endl << "channels = " << bmp.channels() << endl;
+    cout << "Number of rows = " << bmp.rows << endl << "Number of columns = " << bmp.cols << endl;
+    cout << "Dimension = " << bmp.dims << endl << "Number of bytes per element = " << bmp.elemSize() << endl;
+    cout << "Number of bytes per channel per element = " << bmp.elemSize1() << endl << "type = " << bmp.type() << endl;
 
-    //æœ€å¤§å€¼552ï¼Œ é™¤ä»¥4
-    pan.convertTo(pan, CV_8UC1, 1.0 / 4.0, 0);
+    //×î´óÖµ552£¬ ³ıÒÔ4
+    bmp.convertTo(bmp, CV_8UC1, 1.0 / 4.0, 0);
 
-    namedWindow("pan", WINDOW_NORMAL);  //è‹¥å›¾ç‰‡å¤ªå¤§ï¼Œç”¨WINDOW_NORMALçš„æ–¹å¼å¯ä»¥è®©å›¾ç‰‡çš„æ˜¾ç¤ºå¤§å°éšçª—å£å¤§å°ç¼©æ”¾
-    imshow("pan", pan);  // æ˜¾ç¤ºå›¾ç‰‡ 
+    namedWindow("pan", WINDOW_NORMAL);  //ÈôÍ¼Æ¬Ì«´ó£¬ÓÃWINDOW_NORMALµÄ·½Ê½¿ÉÒÔÈÃÍ¼Æ¬µÄÏÔÊ¾´óĞ¡Ëæ´°¿Ú´óĞ¡Ëõ·Å
+    imshow("pan", bmp);  // ÏÔÊ¾Í¼Æ¬ 
     waitKey();
-
-    return pan;
 
 }
 
-Mat Median_Filtering(string ImageName) {
-    Mat bmp = imread(ImageName,IMREAD_GRAYSCALE);
+Mat DIP::Median_Filtering() const {
     Mat bmp_filted;
     bmp_filted.create(bmp.rows, bmp.cols, CV_8UC1);
 
     unsigned char* pBmp_filted = bmp_filted.data;
-    int size = 3;//çª—å£å¤§å°
-    uchar* pTmp = new uchar[size * size];//ç¼“å†²åŒº
-    for (int i = size / 2; i < bmp_filted.rows - size / 2; i++)//ä»ç¬¬size/2å¼€å§‹åˆ°å€’æ•°ç¬¬size/2åˆ—
+    int size = 3;//´°¿Ú´óĞ¡
+    uchar* pTmp = new uchar[size * size];//»º³åÇø
+    for (int i = size / 2; i < bmp_filted.rows - size / 2; i++)//´ÓµÚsize/2¿ªÊ¼µ½µ¹ÊıµÚsize/2ÁĞ
     {
-        for (int j = size / 2; j < bmp_filted.cols - size / 2; j++)//ä»ç¬¬size/2å¼€å§‹åˆ°å€’æ•°ç¬¬size/2è¡Œ
-        {   //è¿™ä¸ªæ˜¯ä»¥å…ˆä»£å€¼å†æ’åºçš„æ–¹æ³•
+        for (int j = size / 2; j < bmp_filted.cols - size / 2; j++)//´ÓµÚsize/2¿ªÊ¼µ½µ¹ÊıµÚsize/2ĞĞ
+        {   //Õâ¸öÊÇÒÔÏÈ´úÖµÔÙÅÅĞòµÄ·½·¨
             // data
             int idx = 0;
             for (int k = i - size / 2; k <= i + size / 2; k++)
@@ -96,10 +90,9 @@ Mat Median_Filtering(string ImageName) {
                     pTmp[k] = tdata;
                 }
             }
-
-            ////è¿™ä¸ªæ˜¯ä»¥æ ˆä½œä¸ºæ’åºçš„æ–¹æ³•
-            //pTmp[0] = *bmp.ptr<uchar>(i - size / 2, j - size / 2);//æ ˆçš„æœ€å¤§é•¿åº¦ä¸ºsize*sizeï¼Œç¬¬ä¸€ä¸ªå…ƒç´ ç›´æ¥å…¥æ ˆï¼Œä»¥ä»å°åˆ°å¤§å…¥æ ˆ
-            //int length = 1;//å½“å‰æ ˆçš„é•¿åº¦
+            ////Õâ¸öÊÇÒÔÕ»×÷ÎªÅÅĞòµÄ·½·¨
+            //pTmp[0] = *bmp.ptr<uchar>(i - size / 2, j - size / 2);//Õ»µÄ×î´ó³¤¶ÈÎªsize*size£¬µÚÒ»¸öÔªËØÖ±½ÓÈëÕ»£¬ÒÔ´ÓĞ¡µ½´óÈëÕ»
+            //int length = 1;//µ±Ç°Õ»µÄ³¤¶È
             //for (int k = i - size / 2 + 1; k <= i + size / 2; k++){
             //    for (int l = j - size / 2; l <= j + size / 2; l++)
             //    {   
@@ -113,12 +106,12 @@ Mat Median_Filtering(string ImageName) {
             //                    pTmp[ik] = pTmp[ik - 1];
             //                }
             //                pTmp[t] = *bmp.ptr<uchar>(k, l);
-            //            }//å¦‚æœå°äºå½“å‰å…ƒç´ ï¼Œä½†æ˜¯å¤§äºä¹‹å‰çš„å…ƒç´ ï¼Œåˆ™å½“å‰å…ƒç´ ä¹‹åï¼ˆåŒ…æ‹¬å½“å‰ï¼‰çš„å…ƒç´ å‡ºæ ˆï¼ˆåˆ°åä¸€ä¸ªï¼‰
+            //            }//Èç¹ûĞ¡ÓÚµ±Ç°ÔªËØ£¬µ«ÊÇ´óÓÚÖ®Ç°µÄÔªËØ£¬Ôòµ±Ç°ÔªËØÖ®ºó£¨°üÀ¨µ±Ç°£©µÄÔªËØ³öÕ»£¨µ½ºóÒ»¸ö£©
             //        }
             //        if (t == length) {
             //            pTmp[length] = *bmp.ptr<uchar>(k, l);
-            //        }//æ¯”æ‰€æœ‰å…ƒç´ å¤§ï¼Œå…¥æ ˆ
-            //        length++;//å…¥æ ˆç»“æŸæ ˆçš„é•¿åº¦åŠ ä¸€
+            //        }//±ÈËùÓĞÔªËØ´ó£¬ÈëÕ»
+            //        length++;//ÈëÕ»½áÊøÕ»µÄ³¤¶È¼ÓÒ»
             //    }
             //}
             //assignment
@@ -135,24 +128,230 @@ Mat Median_Filtering(string ImageName) {
 
 }
 
-Mat Linear_stretching(string ImageName)
-{
-    Mat bmp = imread(ImageName, IMREAD_COLOR);
-    int vgray[256][3];//ç°åº¦é¢‘ç‡
-    int value = 2;//çº¿æ€§æ‹‰ä¼¸çš„ç¨‹åº¦
-    int numa = (int)bmp.rows * bmp.cols * value / 100;//åˆå§‹çš„åƒç´ é¢‘ç‡
-    int numb = (int)bmp.rows * bmp.cols * (100 - value) / 100;//æœ€ç»ˆçš„åƒç´ é¢‘ç‡
-    int c = 0, d = 255;//ç›®æ ‡
-    int a[3] = { 0 }, b[3] = { 255 };
-    MatIterator_<Vec3b> it;
-    for (it = bmp.begin<Vec3b>(); it != bmp.end<Vec3b>(); it++) {
+//À­ÉìµÄ´¦Àíº¯Êı,½«tÔÚaµ½b·¶Î§ÄÚÀ­Éì
+uchar Linear_stretching1(uchar t,int a, int b) {
+    if (t < a) {
+        t = 0;
+    }
+    else {
+        if (t > b){
+            t = 255;
+        }
+        else {
+            t = (uchar)b / (b - a) * (t - a);
+        }
+    }
+    return t;
+}
 
-    }//è¿­ä»£å™¨éå†
+Mat DIP::Linear_stretching()const
+{
+    namedWindow("color", WINDOW_NORMAL);  //ÈôÍ¼Æ¬Ì«´ó£¬ÓÃWINDOW_NORMALµÄ·½Ê½¿ÉÒÔÈÃÍ¼Æ¬µÄÏÔÊ¾´óĞ¡Ëæ´°¿Ú´óĞ¡Ëõ·Å
+    imshow("color", bmp);  // ÏÔÊ¾Í¼Æ¬ 
+    waitKey();
+    int vgray[256][3] = { 0 };//»Ò¶ÈÆµÂÊÖ±·½Í¼
+    int value = 2;//ÏßĞÔÀ­ÉìµÄ³Ì¶È
+    int numa = (int)bmp.rows * bmp.cols * value / 100;//³õÊ¼µÄÏñËØÆµÂÊ
+    int numb = (int)bmp.rows * bmp.cols * (100 - value) / 100;//×îÖÕµÄÏñËØÆµÂÊ
+    int c = 0, d = 255;//Ä¿±ê
+    int a[3] = { 0 }, b[3] = { 255 }; // ×óÖµÊı×éºÍÓÒÖµÊı×é
     for (int i = 0; i < bmp.rows; i++) {
         for (int j = 0; j < bmp.cols; j++) {
-            for (int channel = 0; channel < bmp.channels(); channel++) {
-                vgray[bmp.at[channe]]
+           for (int channel = 0; channel < bmp.channels(); channel++) {
+             vgray[bmp.at<Vec3b>(i,j)[channel]][channel]+=1;
             }
         }
     }
+    //¼ÆËã×óÖµ
+     for(int channel=0;channel<bmp.channels();channel++){
+        for (int i = 0,sum[3] = { 0 }; i < 256; i++){
+            sum[channel] += vgray[i][channel];
+            if (sum[channel] > numa) {
+                a[channel] = i;
+                break;
+            }
+        }
+     }
+     //¼ÆËãÓÒÖµ
+     for (int channel = 0; channel < bmp.channels(); channel++) {
+         for (int i = 255,sum[3] = { 0 }; i >=0; i--) {
+             sum[channel] += vgray[i][channel];
+             if (sum[channel] > numa) {
+                 b[channel] = i;
+                 break;
+             }
+         }
+     }
+     //À­Éì,ĞÂÍ¼Îªbmpnew
+     Mat bmpnew = bmp.clone();
+     for (int i = 0; i < bmp.rows; i++) {
+         for (int j = 0; j < bmp.cols; j++) {
+             for (int channel = 0; channel < bmp.channels(); channel++) {
+                 //´¦Àíº¯Êı
+                 bmpnew.at<Vec3b>(i,j)[channel] = Linear_stretching1(bmp.at<Vec3b>(i, j)[channel], a[channel], b[channel]);
+             }
+         }
+     }
+     namedWindow("Linear_stretching", WINDOW_NORMAL);  //ÈôÍ¼Æ¬Ì«´ó£¬ÓÃWINDOW_NORMALµÄ·½Ê½¿ÉÒÔÈÃÍ¼Æ¬µÄÏÔÊ¾´óĞ¡Ëæ´°¿Ú´óĞ¡Ëõ·Å
+     imshow("Linear_stretching",bmpnew);// ÏÔÊ¾Í¼Æ¬ 
+     waitKey();
+     
+     return bmpnew;
+}
+
+Mat DIP::Median_Filtering_color()const
+{
+    Mat bmp_filted = bmp.clone();
+    int size = 3;//´°¿Ú´óĞ¡
+    uchar* pTmp = new uchar[size * size];//»º³åÇø
+    for(int channel=0;channel<bmp.channels();channel++){
+        for (int i = size / 2; i < bmp_filted.rows - size / 2; i++)//´ÓµÚsize/2¿ªÊ¼µ½µ¹ÊıµÚsize/2ÁĞ
+        {
+            for (int j = size / 2; j < bmp_filted.cols - size / 2; j++)//´ÓµÚsize/2¿ªÊ¼µ½µ¹ÊıµÚsize/2ĞĞ
+            {   //Õâ¸öÊÇÒÔÏÈ´úÖµÔÙÅÅĞòµÄ·½·¨
+                // data
+                int idx = 0;
+                for (int k = i - size / 2; k <= i + size / 2; k++)
+                {
+                    for (int l = j - size / 2; l <= j + size / 2; l++)
+                    {
+                        pTmp[idx++] = bmp.at<Vec3b>(k, l)[channel];
+                    }
+                }
+                //sorting
+                for (int k = 0; k < size * size - 1; k++)
+                {
+                    int idx = k, tdata;
+                    for (int l = k + 1; l < size * size; l++)
+                    {
+                        if (pTmp[l] < pTmp[idx]) idx = l;
+                    }
+                    if (idx != k)
+                    {
+                        tdata = pTmp[idx];
+                        pTmp[idx] = pTmp[k];
+                        pTmp[k] = tdata;
+                    }
+                }
+                //assignment
+                bmp_filted.at<Vec3b>(i,j)[channel] = pTmp[(size * size) / 2];
+            }
+        }
+    }
+
+    namedWindow("display",WINDOW_NORMAL);
+    imshow("display", bmp_filted);
+    waitKey(0);
+    return bmp_filted;
+}
+
+////ÒÆ¶¯Ò»´Î£¬ÏñËØ»áÆ½ÒÆÁù·ÖÖ®Ò»µÄÍ¼ÏñµÄ³¤¶È
+//Mat Translation(Mat bmp,int n=0) {
+//    enum n {
+//        UP, DOWN, LEFT, RIGHT
+//    };
+//    int mr = (int)bmp.rows / 6;
+//    int mc = (int)bmp.cols / 6;
+//    Mat bmp_filted;
+//    Mat bmp_tran;
+//    switch(bmp.type()) {
+//        case 0://»Ò¶ÈÍ¼
+//            bmp_filted = Mat::zeros(2*mr+bmp.rows, 2*mc+bmp.cols, CV_8UC1);
+//            for (int i = mr; i < bmp.rows+mr; i++) {
+//                for (int j = mc; j < bmp.cols+mc; j++) {
+//                    bmp_filted.at<uchar>(i, j) = bmp.at<uchar>(i, j);
+//                }
+//            }
+//            break;
+//        case 16://²ÊÉ«Í¼
+//            bmp_filted = Mat::zeros(bmp.rows + mr, mc + bmp.cols, CV_8UC3);
+//            for (int i = 0; i < bmp.rows; i++) {
+//                for (int j = 0; j < bmp.cols; j++) {
+//                    for(int channel = 0;channel<3;channel++){
+//                        bmp_filted.at<uchar>(i, j) = bmp.at<uchar>(i, j);
+//                    }
+//                }
+//            }
+//            break;
+//        default://ÆäËû
+//            break;
+//    }
+//}
+//
+//Mat DIP::Translation()
+//{
+//
+//}
+
+//¸ù¾İÄ£°åÂË²¨
+uchar filter1(Mat bmp,const double filter[],int m,int n) {
+    int sum = 0;
+    for (int i = m - 1; i < m + 2; i++) {
+        for (int j = n - 1; j < n + 2; j++) {
+            sum += filter[3*(i - m + 1)+j-n+1] * bmp.at<uchar>(i, j);
+        }
+    }
+    if (sum < 0) {
+        return 0;
+    }
+    else {
+        if (sum > 255) {
+            return 255;
+        }
+        else {
+            return sum;
+        }
+    }
+   
+}
+Mat DIP::Low_pass_filtering()const
+{
+    //µÍÍ¨Ä£°å
+    const double filter[9] = { 1/9 };
+    Mat low = bmp.clone();
+    for (int i = 1; i < bmp.rows - 1; i++) {
+        for (int j = 1; j < bmp.cols - 1; j++) {
+            low.at<uchar>(i, j) = filter1(bmp, filter, i, j);
+        }
+    }
+    return low;
+}
+
+
+Mat DIP::binary()
+{
+    Mat bi = Mat::zeros(bmp.rows, bmp.cols, CV_8UC1);
+    //ÇóÈ«¾ÖÆ½¾ùÖµ
+    double sum = 0;
+    for (int i = 0; i < bmp.rows; i++) {
+        for (int j = 0; j < bmp.cols; j++) {
+            sum +=bmp.at<uchar>(i, j);
+        }
+    }
+    sum /=  bmp.rows * bmp.cols;
+    uchar average = (uchar)sum;
+    //´óÓÚÆ½¾ùÖµÎª255£¬·ñÔòÎª0
+    for (int i = 0; i < bmp.rows; i++) {
+        for (int j = 0; j < bmp.cols; j++) {
+            if (bmp.at<uchar>(i, j) > average) {
+                bi.at<uchar>(i, j) = 255;
+            }
+        }
+    }
+    return bi;
+}
+
+Mat DIP::High_pass_filtering()const
+{
+    //¸ßÍ¨Ä£°å
+    const double filter[9] = { -1,-1,-1,
+                            -1, 8,-1,
+                            -1,-1,-1 };
+    Mat high = bmp.clone();
+    for (int i = 1; i < bmp.rows - 1; i++) {
+        for (int j = 1; j < bmp.cols - 1; j++) {
+            high.at<uchar>(i, j) = filter1(bmp,filter,i,j);
+        }
+    }
+    return high;
 }

@@ -5,13 +5,35 @@
 #include <opencv2/highgui/highgui.hpp>
 
 
-using namespace std;  // çœå»å±å¹•è¾“å‡ºå‡½æ•°coutå‰çš„std::
-using namespace cv;   // çœå»opencvå‡½æ•°å‰é¢åŠ cv::çš„å¿…è¦æ€§
-//å½©è‰²å›¾
-Mat pre_process_color(string ImageName);
-//ç°åº¦å›¾
-Mat pre_process_pan(string ImageName);
-//ç°åº¦å›¾ä¸­å€¼æ»¤æ³¢
-Mat Median_Filtering(string ImageName);
-//å½©è‰²å›¾%2çº¿æ€§æ‹‰ä¼¸
-Mat Linear_stretching(string ImageName);
+using namespace std;  // Ê¡È¥ÆÁÄ»Êä³öº¯ÊıcoutÇ°µÄstd::
+using namespace cv;   // Ê¡È¥opencvº¯ÊıÇ°Ãæ¼Ócv::µÄ±ØÒªĞÔ
+class DIP {
+	public:
+	//¶ÁÈ¡²ÊÉ«Í¼
+	void pre_process_color(string ImageName);
+	//¶ÁÈ¡»Ò¶ÈÍ¼
+	void pre_process_pan(string ImageName);
+	//»Ò¶ÈÍ¼ÖĞÖµÂË²¨
+	Mat Median_Filtering ()const;
+	//²ÊÉ«Í¼%2ÏßĞÔÀ­Éì
+	Mat Linear_stretching()const;
+	//²ÊÉ«Í¼ÖĞÖµÂË²¨
+	Mat Median_Filtering_color()const;
+	//²ÊÉ«Í¼Æ½ÒÆ
+	Mat Translation();
+	//»Ò¶ÈÍ¼¶şÖµ»¯ 
+	Mat binary();
+	//»Ò¶ÈÍ¼µÄ¸ßÍ¨ÂË²¨
+	Mat High_pass_filtering()const;
+	//»Ò¶ÈÍ¼µÍÍ¨ÂË²¨
+	Mat Low_pass_filtering()const;
+private:
+	//¶ÁÈ¡µÄÍ¼Ïñ
+	Mat bmp;
+	//¶ÁÈ¡Í¼ÏñµÄÀàĞÍ
+	bool b_color;
+	//À©³äµÄÍ¼Ïñ
+	Mat* bmp_padding;
+	//ÏÖÔÚµÄÍ¼ÏñµÄ
+};
+
