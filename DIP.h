@@ -3,37 +3,43 @@
 #include<string>
 #include <opencv2/core/core.hpp>   
 #include <opencv2/highgui/highgui.hpp>
+#include"Frequency_distribution.h"
 
+using namespace std;  // çœå»å±å¹•è¾“å‡ºå‡½æ•°coutå‰çš„std::
+using namespace cv;   // çœå»opencvå‡½æ•°å‰é¢åŠ cv::çš„å¿…è¦æ€§
 
-using namespace std;  // Ê¡È¥ÆÁÄ»Êä³öº¯ÊıcoutÇ°µÄstd::
-using namespace cv;   // Ê¡È¥opencvº¯ÊıÇ°Ãæ¼Ócv::µÄ±ØÒªĞÔ
 class DIP {
-	public:
-	//¶ÁÈ¡²ÊÉ«Í¼
+public:
+	DIP();
+	//è¯»å–æ–‡ä»¶ï¼Œé»˜è®¤ä¸ºç°åº¦å›¾ï¼Œå½©è‰²å›¾b_color=1
+	DIP(string ImageName, bool b_color1=0);
+	//è¯»å–å½©è‰²å½±åƒå›¾,t
 	void pre_process_color(string ImageName);
-	//¶ÁÈ¡»Ò¶ÈÍ¼
+	//è¯»å–ç°åº¦å½±åƒå›¾,t
 	void pre_process_pan(string ImageName);
-	//»Ò¶ÈÍ¼ÖĞÖµÂË²¨
+	//ç°åº¦å›¾ä¸­å€¼æ»¤æ³¢,t
 	Mat Median_Filtering ()const;
-	//²ÊÉ«Í¼%2ÏßĞÔÀ­Éì
+	//å½©è‰²å›¾%2çº¿æ€§æ‹‰ä¼¸
 	Mat Linear_stretching()const;
-	//²ÊÉ«Í¼ÖĞÖµÂË²¨
+	//ç°åº¦å›¾çº¿æ€§æ‹‰ä¼¸
+	Mat Linear_stretching_gray()const;
+	//å½©è‰²å›¾ä¸­å€¼æ»¤æ³¢
 	Mat Median_Filtering_color()const;
-	//²ÊÉ«Í¼Æ½ÒÆ
-	Mat Translation();
-	//»Ò¶ÈÍ¼¶şÖµ»¯ 
-	Mat binary();
-	//»Ò¶ÈÍ¼µÄ¸ßÍ¨ÂË²¨
+	//ç°åº¦å›¾çš„é«˜é€šæ»¤æ³¢,t
 	Mat High_pass_filtering()const;
-	//»Ò¶ÈÍ¼µÍÍ¨ÂË²¨
+	//ç°åº¦å›¾ä½é€šæ»¤æ³¢,t
 	Mat Low_pass_filtering()const;
+	//ç°åº¦å›¾äºŒå€¼åŒ–,çŠ¶æ€æ³•,t
+	Mat binary(uchar T);
+	//ç°åº¦å›¾äºŒå€¼åŒ–,åˆ¤æ–­åˆ†ææ³•,t
+	Mat binary2(uchar T);
+	//å¤åˆ¶ä¸€ä»½å›¾åƒ
+	Mat Getbmp();
 private:
-	//¶ÁÈ¡µÄÍ¼Ïñ
+	//è¯»å–çš„å›¾åƒ
 	Mat bmp;
-	//¶ÁÈ¡Í¼ÏñµÄÀàĞÍ
+	//è¯»å–å›¾åƒçš„ç±»å‹
 	bool b_color;
-	//À©³äµÄÍ¼Ïñ
-	Mat* bmp_padding;
-	//ÏÖÔÚµÄÍ¼ÏñµÄ
 };
 
+void test();
