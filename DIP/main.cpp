@@ -2,5 +2,5 @@
 #include "DIP.h"
 
 int main() {
-	
+	test();
 }
